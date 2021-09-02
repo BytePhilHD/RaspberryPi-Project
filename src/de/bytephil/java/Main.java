@@ -13,9 +13,13 @@ public class Main {
     private static int temp = 0;
 
     public static void main(String[] args) throws InterruptedException {
+
+        DMX.dmxthread.run();
+
         while(true) {
-            checkTemp();
-            Thread.sleep(1000);
+            //runCommand("gpio mode 1 pwm");
+            //checkTemp();
+            //Thread.sleep(1000);
         }
     }
 
@@ -30,8 +34,8 @@ public class Main {
                     + " - Average: " + (total / values.size())
                     + " - Number of measurements: " + values.size());
 
-            if (temp > 33000) {
-                runCommand("gpio pwm 1 500");
+            if (temp > 35000) {
+                runCommand("gpio pwm 1 480");
             } else {
                 runCommand("gpio pwm 1 430");
             }
@@ -40,14 +44,7 @@ public class Main {
                     + ex.getMessage());
         }
     }
- /*   private static void test() {
-        runCommand("gpio pwm 1 " + i*100);
-        System.out.println("PWM auf " + i*100);
 
-        i++;
-    }
-
-  */
 
     private static void runCommand(String cmd) {
         Scanner s = null;
