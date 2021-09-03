@@ -7,17 +7,8 @@ import java.util.Date;
 
 public class Console {
 
-    public static Console instance;
 
-    public static Console getInstance() {
-        return instance;
-    }
-
-    public Console () {
-        instance = this;
-    }
-
-    public void print(String msg, MessageType type) {
+    public static void print(String msg, MessageType type) {
         System.out.println("[" + getTime() + "] " + type + " - " + msg);
     }
 

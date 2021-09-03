@@ -1,3 +1,5 @@
+package main;
+
 import utils.DMX;
 
 import java.io.BufferedReader;
@@ -12,6 +14,18 @@ public class Main {
     private static final List<Integer> values = new ArrayList<>();
 
     private static int temp = 0;
+
+    public static Main instance;
+
+    public static Main getInstance() {
+        return instance;
+    }
+
+    public Main (){
+        instance = this;
+    }
+
+    public boolean debugMSG = true;
 
     public static void main(String[] args) throws InterruptedException {
 
