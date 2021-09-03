@@ -35,7 +35,7 @@ public class Output {
             bit = 1;
         }
         int dmxpin = 0;
-        Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
+        //Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
 
         /*try {
             s = new Scanner(Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit).getInputStream());
