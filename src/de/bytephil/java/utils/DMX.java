@@ -33,7 +33,8 @@ public class DMX {
         }
 
         System.out.println(bits.get(512));
-        testSchedular();
+        interruptServiceRoutine();
+        //testSchedular();
         //dmxthread.start();
 
     }
@@ -45,17 +46,82 @@ public class DMX {
 
     }
 
+    public static int processed = 0;
+
+
+    public static void interruptServiceRoutine() throws InterruptedException, ExecutionException {
+        int iCount = 4096, iDelay = 4;
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        List<Future<Integer>> futures = new ArrayList<>(iCount);
+
+        for (int i = 0; i < iCount; i++) {
+            int j = i;
+
+            if (i == 0) {
+                System.out.println("BREAK");
+                Output.outputDMX(BitType.ZERO);
+                futures.add(scheduler.schedule(() -> j, 3, TimeUnit.SECONDS));                      // BREAK BIT = 88 us
+                for (Future<Integer> e : futures) {
+                    e.get();
+                }
+                System.out.println("MARK");
+                Output.outputDMX(BitType.ZERO);
+                futures.add(scheduler.schedule(() -> j, 3, TimeUnit.SECONDS));                      // BREAK BIT = 88 us
+                for (Future<Integer> e : futures) {
+                    e.get();
+                }
+            } else {
+                processed++;
+                System.out.println("Processed: " + processed);
+                futures.add(scheduler.schedule(() -> j, iDelay, TimeUnit.MICROSECONDS));
+            }
+        }
+        for (Future<Integer> e : futures) {
+            e.get();
+        }
+    }
+
+
     public static void testSchedular() throws InterruptedException, ExecutionException {
-        int iCount = 4096, iDelay = 4, processed = 0;
+        int iCount = 4096, iDelay = 4;
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
         System.out.println("Start");
         List<Future<Integer>> futures = new ArrayList<>(iCount);
-        for (int i =0; i< iCount; i++) {
+
+        if (processed == 0) {
+            System.out.println("BREAK SECTION");
+            futures.add(scheduler.schedule(() -> 1, 4, TimeUnit.SECONDS));                            // BREAK = 88us
+            output = 0;
+
+            futures.add(scheduler.schedule(() -> 1, 2, TimeUnit.SECONDS));                            // MARK = 8us
+            System.out.println("MARK after BREAK");
+            output = 1;
+        }
+        Output.outputDMX(BitType.ZERO);
+        // dmxthread.sleep(0, 4000);                                        // Start-Bit = 4 us
+
+        for (int i = 0; i < 8; i++) {
+            processed++;
+            System.out.println("Processed: " + processed);
+
+            Thread.sleep(0, 0);                                   // Bit-Time = 4 us
+        }
+        Output.outputDMX(BitType.ONE);
+        //dmxthread.sleep(0, 8000);                                        // 2 Stop-Bits = 8 us
+
+        if (processed == 4096) {
+            return;
+        }
+
+        /*for (int i =0; i< iCount; i++) {
             int j = i;
             processed++;
             System.out.println("Processed: " + processed);
             futures.add(scheduler.schedule(() -> j, iDelay, TimeUnit.MICROSECONDS));
         }
+
+         */
         for (Future<Integer> e : futures) {
             e.get();
         }
@@ -64,6 +130,7 @@ public class DMX {
 
     public static Thread dmxthread = new Thread(new Runnable() {
         int processed = 0;
+
         @Override
         public void run() {
 
