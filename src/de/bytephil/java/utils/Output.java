@@ -11,6 +11,8 @@ import java.util.Scanner;
 
 public class Output {
 
+    public static int dmxpin = 0;
+
     private static void setOutput(int pin, int value, OutputType type) {
         Scanner s = null;
         String cmd = null;
@@ -34,19 +36,20 @@ public class Output {
         if (type == BitType.ONE) {
             bit = 1;
         }
-        int dmxpin = 0;
-        //Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
 
-        /*try {
+        Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
+
+        /*
+        try {
             s = new Scanner(Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit).getInputStream());
-            if (Main.getInstance().debugMSG) {
-                Console.getInstance().print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
-            }
+
         } catch (IOException e) {
-            Console.getInstance().print("Failed to output DMX signal to pin!", MessageType.ERROR);
+            Console.print("Failed to output DMX signal to pin!", MessageType.ERROR);
             e.printStackTrace();
         }
 
          */
+
+
     }
 }

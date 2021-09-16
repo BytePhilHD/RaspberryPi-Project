@@ -10,13 +10,7 @@ public class Console {
 
 
     public static void print(String msg, MessageType type) {
-        try {
-            if (!Main.getInstance().debugMSG && type == MessageType.DEBUG) {
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         System.out.println("[" + getTime() + "] " + type + " - " + msg);
     }
 

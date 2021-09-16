@@ -1,5 +1,6 @@
 package main;
 
+import utils.DMX_Send;
 import utils.DMX_old;
 
 import java.io.BufferedReader;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
     private static final String FILE = "/sys/class/thermal/thermal_zone0/temp";
@@ -27,15 +29,9 @@ public class Main {
 
     public boolean debugMSG = true;
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
 
-        DMX_old.dmxthread.run();
-
-        while(true) {
-            //runCommand("gpio mode 1 pwm");
-            //checkTemp();
-            //Thread.sleep(1000);
-        }
+        DMX_Send.sendDMXRoutine();
     }
 
     private static void checkTemp() {
