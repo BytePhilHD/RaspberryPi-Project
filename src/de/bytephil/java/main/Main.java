@@ -1,6 +1,6 @@
 package main;
 
-import utils.DMX;
+import utils.DMX_old;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -29,7 +29,7 @@ public class Main {
 
     public static void main(String[] args) throws InterruptedException {
 
-        DMX.dmxthread.run();
+        DMX_old.dmxthread.run();
 
         while(true) {
             //runCommand("gpio mode 1 pwm");
