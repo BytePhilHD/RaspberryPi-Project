@@ -32,6 +32,7 @@ public class Main {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 
         DMX_Send.sendDMXRoutine();
+        runCommand("gpio mode 1 output");
     }
 
     private static void checkTemp() {

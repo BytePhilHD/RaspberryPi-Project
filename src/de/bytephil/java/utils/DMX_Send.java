@@ -27,9 +27,8 @@ public class DMX_Send {
                 Output.outputDMX(BitType.ZERO);
                 System.out.println("BREAK SECTION");
                 futures.add(scheduler.schedule(() -> 0, 1, TimeUnit.MILLISECONDS));                      // BREAK BIT = 88 us
-                for (Future<Integer> e : futures) {
-                    e.get();
-                }
+                for (Future<Integer> e : futures) { e.get(); }
+                futures.clear();
 
                 Output.outputDMX(BitType.ONE);
                 System.out.println("MARK after BREAK");

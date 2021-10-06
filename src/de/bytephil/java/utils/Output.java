@@ -37,18 +37,16 @@ public class Output {
             bit = 1;
         }
 
-        Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
+       // Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
 
-        /*
+
         try {
             s = new Scanner(Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit).getInputStream());
 
         } catch (IOException e) {
             Console.print("Failed to output DMX signal to pin!", MessageType.ERROR);
-            e.printStackTrace();
         }
 
-         */
 
 
     }
