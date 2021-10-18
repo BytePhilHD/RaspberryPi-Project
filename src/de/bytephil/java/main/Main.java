@@ -2,6 +2,7 @@ package main;
 
 import utils.DMX_Send;
 import utils.DMX_old;
+import utils.Output;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -23,16 +24,46 @@ public class Main {
         return instance;
     }
 
-    public Main (){
+    public static Scanner scanner = new Scanner(System.in);
+
+    public Main() {
         instance = this;
     }
 
     public boolean debugMSG = true;
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+        startUp();
+    }
 
-        DMX_Send.sendDMXRoutine();
-        runCommand("gpio mode 1 output");
+    public static void startUp() throws ExecutionException, InterruptedException {
+        System.out.println("Starting System...");
+
+        boolean raspberry = Output.testOutput();
+        if (raspberry) {
+            System.out.println("Your System is supported! The DMX program will start shortly!");
+            DMX_Send.sendDMXRoutine();
+        } else {
+            System.out.println("Your System is not supported!");
+            System.out.println("You have to run Ubuntu20 or higher with LGPIO installed (sudo apt install python3-lgpio) on a RaspberryPi");
+            System.out.println("");
+            System.out.println("You can find more information on https://github.com/BytePhilHD/RaspberryPi-Project");
+            System.out.println("");
+            Thread.sleep(1000);
+            System.out.println("If you still want to continue, type 'y', if you want to close type 'n'. Note: this option is not supported and may not work!");
+            String input = scanner.next();
+            switch (input) {
+                case("y"):
+                    System.out.println("Trying to start the program... Note: this option is not supported and may not work!");
+                    DMX_Send.sendDMXRoutine();
+                    break;
+                case("n"):
+                    System.out.println("System will shutdown...");
+                    Thread.sleep(1000);
+                    System.exit(0);
+                    break;
+            }
+        }
     }
 
     private static void checkTemp() {

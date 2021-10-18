@@ -30,24 +30,26 @@ public class Output {
         }
     }
 
+    public static boolean testOutput() {
+        try {
+            new Scanner(Runtime.getRuntime().exec("gpio " + dmxpin + " output").getInputStream());
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     public static void outputDMX(BitType type) {
         Scanner s = null;
         int bit = 0;
         if (type == BitType.ONE) {
             bit = 1;
         }
-
-       // Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
-
-
+        // Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
         try {
             s = new Scanner(Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit).getInputStream());
-
         } catch (IOException e) {
             Console.print("Failed to output DMX signal to pin!", MessageType.ERROR);
         }
-
-
-
     }
 }
