@@ -1,5 +1,7 @@
 package main;
 
+import enums.MessageType;
+import utils.Console;
 import utils.DMX_Send;
 import utils.DMX_old;
 import utils.Output;
@@ -37,28 +39,29 @@ public class Main {
     }
 
     public static void startUp() throws ExecutionException, InterruptedException {
-        System.out.println("Starting System...");
+        Console.print("Starting System...", MessageType.INFO);
+        System.out.println("");
 
         boolean raspberry = Output.testOutput();
         if (raspberry) {
-            System.out.println("Your System is supported! The DMX program will start shortly!");
+            Console.print("Your System is supported! The DMX program will start shortly!", MessageType.INFO);
             DMX_Send.sendDMXRoutine();
         } else {
-            System.out.println("Your System is not supported!");
-            System.out.println("You have to run Ubuntu20 or higher with LGPIO installed (sudo apt install python3-lgpio) on a RaspberryPi");
+            Console.print("Your System is not supported!", MessageType.ERROR);
+            Console.print("You have to run Ubuntu20 or higher with LGPIO installed (sudo apt install python3-lgpio) on a RaspberryPi", MessageType.INFO);
             System.out.println("");
-            System.out.println("You can find more information on https://github.com/BytePhilHD/RaspberryPi-Project");
+            Console.print("You can find more information on https://github.com/BytePhilHD/RaspberryPi-Project", MessageType.INFO);
             System.out.println("");
             Thread.sleep(1000);
-            System.out.println("If you still want to continue, type 'y', if you want to close type 'n'. Note: this option is not supported and may not work!");
+            Console.print("If you still want to continue, type 'y', if you want to close type 'n'. Note: this option is not supported and may not work!", MessageType.WARNING);
             String input = scanner.next();
             switch (input) {
                 case("y"):
-                    System.out.println("Trying to start the program... Note: this option is not supported and may not work!");
+                    Console.print("Trying to start the program... Note: this option is not supported and may not work!", MessageType.WARNING);
                     DMX_Send.sendDMXRoutine();
                     break;
                 case("n"):
-                    System.out.println("System will shutdown...");
+                    Console.print("System will shutdown...", MessageType.WARNING);
                     Thread.sleep(1000);
                     System.exit(0);
                     break;

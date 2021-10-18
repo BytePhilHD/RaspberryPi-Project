@@ -8,13 +8,15 @@ import java.util.Date;
 
 public class Console {
 
-
     public static void print(String msg, MessageType type) {
 
-        System.out.println("[" + getTime() + "] " + type + " - " + msg);
-    }
-
-    private static String getTime() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        if (type == MessageType.ERROR) {
+            System.out.println("[" + date + "] " + type);
+            System.out.println("[" + date + "] " + type + " - " + msg);
+            System.out.println("[" + date + "] " + type);
+        } else {
+            System.out.println("[" + date + "] " + type + " - " + msg);
+        }
     }
 }
