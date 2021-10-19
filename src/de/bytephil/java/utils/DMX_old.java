@@ -75,13 +75,13 @@ public class DMX_old {
 
             if (i == 0) {
                 System.out.println("BREAK");
-                Output.outputDMX(BitType.ZERO);
+               // Output.outputDMX(BitType.ZERO);
                 futures.add(scheduler.schedule(() -> j, 3, TimeUnit.SECONDS));                      // BREAK BIT = 88 us
                 for (Future<Integer> e : futures) {
                     e.get();
                 }
                 System.out.println("MARK");
-                Output.outputDMX(BitType.ZERO);
+                //Output.outputDMX(BitType.ZERO);
                 futures.add(scheduler.schedule(() -> j, 1, TimeUnit.SECONDS));                      // BREAK BIT = 88 us
                 for (Future<Integer> e : futures) {
                     e.get();
@@ -108,19 +108,19 @@ public class DMX_old {
         List<Future<Integer>> futures = new ArrayList<>(iCount);
 
         if (processed == 0) {
-            Output.outputDMX(BitType.ZERO);
+          //  Output.outputDMX(BitType.ZERO);
             System.out.println("BREAK SECTION");
             futures.add(scheduler.schedule(() -> 1, 88, TimeUnit.MICROSECONDS));                            // BREAK = 88us
             for (Future<Integer> e : futures) {e.get();}
 
-            Output.outputDMX(BitType.ONE);
+           // Output.outputDMX(BitType.ONE);
             System.out.println("MARK after BREAK");
             futures.add(scheduler.schedule(() -> 1, 8, TimeUnit.MICROSECONDS));                            // MARK = 8us
             for (Future<Integer> e : futures) {e.get();}
         }
         while (processed <= 4096) {
 
-            Output.outputDMX(BitType.ZERO);
+           // Output.outputDMX(BitType.ZERO);
             futures.add(scheduler.schedule(() -> 0, 4, TimeUnit.MICROSECONDS));                              // Start-Bit = 4 us
             for (Future<Integer> e : futures) {e.get();}
             futures.clear();
@@ -133,7 +133,7 @@ public class DMX_old {
                 futures.clear();
 
             }
-            Output.outputDMX(BitType.ONE);
+          //  Output.outputDMX(BitType.ONE);
             futures.add(scheduler.schedule(() -> 0, 8, TimeUnit.MICROSECONDS));                                        // 2 Stop-Bits = 8 us
             for (Future<Integer> e : futures) {e.get();}
             futures.clear();
@@ -162,7 +162,7 @@ public class DMX_old {
                     System.out.println("MARK zw. RESET und Startbyte");
                     output = 1;
                 }
-                Output.outputDMX(BitType.ZERO);
+       //         Output.outputDMX(BitType.ZERO);
                 dmxthread.sleep(0, 4000);                                        // Start-Bit = 4 us
 
                 for (int i = 0; i < 8; i++) {
@@ -171,7 +171,7 @@ public class DMX_old {
 
                     Thread.sleep(0, 0);                                   // Bit-Time = 4 us
                 }
-                Output.outputDMX(BitType.ONE);
+          //      Output.outputDMX(BitType.ONE);
                 dmxthread.sleep(0, 8000);                                        // 2 Stop-Bits = 8 us
 
                 if (processed == 4096) {

@@ -38,18 +38,25 @@ public class Output {
             return false;
         }
     }
+    private static ProcessBuilder processBuilder = new ProcessBuilder();
 
-    public static void outputDMX(BitType type) {
+    public static void outputDMX(int bit) {
         Scanner s = null;
-        int bit = 0;
-        if (type == BitType.ONE) {
-            bit = 1;
-        }
+
         // Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
         try {
-            s = new Scanner(Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit).getInputStream());
-        } catch (IOException e) {
-            Console.print("Failed to output DMX signal to pin!", MessageType.ERROR);
+            processBuilder.command("bash", "-c", "gpio write " + dmxpin + " " + bit);
+            Process process = processBuilder.start();
+
+            //Process p = Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit);
+            //p.waitFor();
+           // s = new Scanner(Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit).getInputStream());
+        }catch (Exception e) {
+            Console.print(e.getMessage(), MessageType.ERROR);
         }
+
+
+
+        //Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
     }
 }

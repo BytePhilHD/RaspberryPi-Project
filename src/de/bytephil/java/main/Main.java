@@ -25,6 +25,7 @@ public class Main {
     public static Main getInstance() {
         return instance;
     }
+    private static String version = "0.0.1";
 
     public static Scanner scanner = new Scanner(System.in);
 
@@ -38,8 +39,15 @@ public class Main {
         startUp();
     }
 
+    /*
+
+                    The LGPIO Function on RaspberryPI seems to be too slow to handle the DMX thing
+
+
+     */
     public static void startUp() throws ExecutionException, InterruptedException {
         Console.print("Starting System...", MessageType.INFO);
+        Console.print("Your System is running Version " + version + "!", MessageType.INFO);
         System.out.println("");
 
         boolean raspberry = Output.testOutput();

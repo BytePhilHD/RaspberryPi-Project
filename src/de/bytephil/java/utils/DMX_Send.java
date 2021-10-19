@@ -1,6 +1,7 @@
 package utils;
 
 import enums.BitType;
+import enums.MessageType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,27 +25,27 @@ public class DMX_Send {
             System.out.println("Start");
 
             if (processed == 0) {
-                Output.outputDMX(BitType.ZERO);
+                Output.outputDMX(0);
                 System.out.println("BREAK SECTION");
                 futures.add(scheduler.schedule(() -> 0, 1, TimeUnit.MILLISECONDS));                      // BREAK BIT = 88 us
                 for (Future<Integer> e : futures) { e.get(); }
                 futures.clear();
 
-                Output.outputDMX(BitType.ONE);
+                Output.outputDMX(1);
                 System.out.println("MARK after BREAK");
 
             }
             while (processed <= 4096) {
 
-                Output.outputDMX(BitType.ZERO);
+                Output.outputDMX(0);
 
                 for (int i = 0; i < 8; i++) {
                     processed++;
-                    Output.outputDMX(BitType.ONE);
+                    Output.outputDMX(1);
                 }
-                Output.outputDMX(BitType.ONE);
+                Output.outputDMX(1);
             }
-            System.out.println("Finished");
+            Console.print("Finished", MessageType.INFO);
             processed = 0;
         }
         // long timetest = System.currentTimeMillis()-time;
