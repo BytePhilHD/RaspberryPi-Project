@@ -1,7 +1,7 @@
 # RaspberryPi-Project
-###This Program will allow users to send out a DMX Signal via a Webinterface, to control several DMX-Lights very easy.
+### This Program will allow users to send out a DMX Signal via a Webinterface, to control several DMX-Lights very easy.
 ###
-####NOTE: This Project is still under development and not finished!
+#### NOTE: This Project is still under development and not finished!
 ##
 If you want to try it yourself, you need to install Pi4J on your Unbuntu running RaspberryPi
 
