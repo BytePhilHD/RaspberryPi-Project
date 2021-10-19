@@ -1,17 +1,22 @@
 package utils;
 
+import com.pi4j.io.gpio.*;
 import enums.BitType;
 import enums.MessageType;
 import enums.OutputType;
 import main.Main;
 import utils.Console;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Output {
 
-    public static int dmxpin = 0;
+    public static int dmxpin = 8;
+    private static GpioController gpio = null;
+    private static GpioPinDigitalOutput pin = null;
 
     private static void setOutput(int pin, int value, OutputType type) {
         Scanner s = null;
@@ -32,9 +37,12 @@ public class Output {
 
     public static boolean testOutput() {
         try {
-            new Scanner(Runtime.getRuntime().exec("gpio " + dmxpin + " output").getInputStream());
+            gpio = GpioFactory.getInstance();
+            pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08,   // PIN NUMBER
+                    "DMXPIN",           // PIN FRIENDLY NAME (optional)
+                    PinState.LOW);
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -45,9 +53,11 @@ public class Output {
 
         // Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
         try {
-            processBuilder.command("bash", "-c", "gpio write " + dmxpin + " " + bit);
-            Process process = processBuilder.start();
-
+            if (bit == 0) {
+                pin.low();
+            } else {
+                pin.high();
+            }
             //Process p = Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit);
             //p.waitFor();
            // s = new Scanner(Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit).getInputStream());

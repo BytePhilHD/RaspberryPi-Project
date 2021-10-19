@@ -14,6 +14,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
+import com.pi4j.io.gpio.GpioPinDigitalOutput;
+import com.pi4j.io.gpio.PinState;
+import com.pi4j.io.gpio.RaspiPin;
+
 public class Main {
     private static final String FILE = "/sys/class/thermal/thermal_zone0/temp";
     private static final List<Integer> values = new ArrayList<>();
@@ -35,8 +41,29 @@ public class Main {
 
     public boolean debugMSG = true;
 
+    private static GpioController gpio = null;
+    private static GpioPinDigitalOutput red = null;
+    private static GpioPinDigitalOutput yellow = null;
+    private static GpioPinDigitalOutput green = null;
+
+
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         startUp();
+       /* gpio = GpioFactory.getInstance();
+
+        red = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08,   // PIN NUMBER
+                "My LED",           // PIN FRIENDLY NAME (optional)
+                PinState.LOW);
+
+        while (true) {
+            red.high();
+            Thread.sleep(1000);
+            red.low();
+            Thread.sleep(1000);
+            System.out.println("Should work");
+        }
+
+        */
     }
 
     /*
