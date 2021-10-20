@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class DMX_Send {
+public class DMXService {
 
     private static int processed = 0;
 
@@ -15,19 +15,21 @@ public class DMX_Send {
         sendDMXRoutine();
     }
 
+    public static boolean dmxRoutine = false;
+
     public static void sendDMXRoutine() throws InterruptedException, ExecutionException {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
         List<Future<Integer>> futures = new ArrayList<>(100);
         // time = System.currentTimeMillis();
-        while (true) {
+        while (dmxRoutine) {
             int iCount = 4096, iDelay = 4;
             System.out.println("Start");
 
             if (processed == 0) {
                 Output.outputDMX(0);
                 System.out.println("BREAK SECTION");
-                futures.add(scheduler.schedule(() -> 0, 1, TimeUnit.MILLISECONDS));                      // BREAK BIT = 88 us
+                futures.add(scheduler.schedule(() -> 0, 1, TimeUnit.MILLISECONDS));           // BREAK BIT = 88 us
                 for (Future<Integer> e : futures) { e.get(); }
                 futures.clear();
 
@@ -48,6 +50,7 @@ public class DMX_Send {
             Console.print("Finished", MessageType.INFO);
             processed = 0;
         }
+        Console.print("The DMX routine was stopped!", MessageType.WARNING);
         // long timetest = System.currentTimeMillis()-time;
         // System.out.println("Took " + timetest + "ms");
     }

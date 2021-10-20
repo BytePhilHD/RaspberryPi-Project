@@ -19,6 +19,11 @@ public class DMX_old {
             https://de.wikipedia.org/wiki/DMX_(Lichttechnik)#Zeitliches_Protokoll
 
             RESET: Thread.sleep(0.088)
+
+
+
+
+            NOTE: This Class is outdated and not working properly! The newest DMX sending method is in the "DMX_SEND" Class!
      */
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {

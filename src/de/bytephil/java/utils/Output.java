@@ -14,59 +14,38 @@ import java.util.Scanner;
 
 public class Output {
 
-    public static int dmxpin = 8;
+    public static Pin dmxpin = RaspiPin.GPIO_08;
     private static GpioController gpio = null;
     private static GpioPinDigitalOutput pin = null;
 
-    private static void setOutput(int pin, int value, OutputType type) {
-        Scanner s = null;
-        String cmd = null;
-
-        if (type == OutputType.PWM) {
-            cmd = "gpio pwm " + pin + " " + value;
-        } else if (type == OutputType.OUTPUT) {
-            cmd = "gpio write " + pin + " " + value;
-        }
-        try {
-            s = new Scanner(Runtime.getRuntime().exec(cmd).getInputStream());
-        } catch (IOException e) {
-            System.out.println("ERROR while tried to execute " + cmd);
-            e.printStackTrace();
-        }
-    }
-
+    // Test if system is running with Pi4J installed
     public static boolean testOutput() {
         try {
-            gpio = GpioFactory.getInstance();
-            pin = gpio.provisionDigitalOutputPin(RaspiPin.GPIO_08,   // PIN NUMBER
+            gpio = GpioFactory.getInstance();       // If the system has Pi4J installed gpio and pin get initialized
+            pin = gpio.provisionDigitalOutputPin(dmxpin,   // PIN NUMBER
                     "DMXPIN",           // PIN FRIENDLY NAME (optional)
                     PinState.LOW);
             return true;
-        } catch (Exception e) {
+        } catch (ExceptionInInitializerError e) {
             return false;
         }
     }
-    private static ProcessBuilder processBuilder = new ProcessBuilder();
 
+    // Output the bit to an specific Port
     public static void outputDMX(int bit) {
         Scanner s = null;
 
-        // Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
         try {
             if (bit == 0) {
                 pin.low();
             } else {
                 pin.high();
             }
-            //Process p = Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit);
-            //p.waitFor();
-           // s = new Scanner(Runtime.getRuntime().exec("gpio write " + dmxpin + " " + bit).getInputStream());
-        }catch (Exception e) {
+        } catch (Exception e) {
             Console.print(e.getMessage(), MessageType.ERROR);
         }
 
 
-
-        //Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
+        // DEBUG Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
     }
 }

@@ -2,29 +2,14 @@ package main;
 
 import enums.MessageType;
 import utils.Console;
-import utils.DMX_Send;
-import utils.DMX_old;
+import utils.DMX;
+import utils.DMXService;
 import utils.Output;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
-import com.pi4j.io.gpio.GpioController;
-import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.gpio.GpioPinDigitalOutput;
-import com.pi4j.io.gpio.PinState;
-import com.pi4j.io.gpio.RaspiPin;
-
 public class Main {
-    private static final String FILE = "/sys/class/thermal/thermal_zone0/temp";
-    private static final List<Integer> values = new ArrayList<>();
-
-    private static int temp = 0;
 
     public static Main instance;
 
@@ -40,11 +25,6 @@ public class Main {
     }
 
     public boolean debugMSG = true;
-
-    private static GpioController gpio = null;
-    private static GpioPinDigitalOutput red = null;
-    private static GpioPinDigitalOutput yellow = null;
-    private static GpioPinDigitalOutput green = null;
 
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
@@ -66,22 +46,19 @@ public class Main {
         */
     }
 
-    /*
-
-                    The LGPIO Function on RaspberryPI seems to be too slow to handle the DMX thing
-
-
-     */
+    //
+    //              Startup function
+    //
     public static void startUp() throws ExecutionException, InterruptedException {
         Console.print("Starting System...", MessageType.INFO);
         Console.print("Your System is running Version " + version + "!", MessageType.INFO);
         System.out.println("");
 
-        boolean raspberry = Output.testOutput();
-        if (raspberry) {
+        boolean raspberry = Output.testOutput();    // Test if system is running with Pi4J installed
+        if (raspberry) {        // if system is running Pi4J
             Console.print("Your System is supported! The DMX program will start shortly!", MessageType.INFO);
-            DMX_Send.sendDMXRoutine();
-        } else {
+            startServices();
+        } else {                // If system is not running Pi4J
             Console.print("Your System is not supported!", MessageType.ERROR);
             Console.print("You have to run Ubuntu20 or higher with LGPIO installed (sudo apt install python3-lgpio) on a RaspberryPi", MessageType.INFO);
             System.out.println("");
@@ -93,8 +70,7 @@ public class Main {
             switch (input) {
                 case("y"):
                     Console.print("Trying to start the program... Note: this option is not supported and may not work!", MessageType.WARNING);
-                    DMX_Send.sendDMXRoutine();
-                    break;
+                    startServices();                    break;
                 case("n"):
                     Console.print("System will shutdown...", MessageType.WARNING);
                     Thread.sleep(1000);
@@ -103,36 +79,9 @@ public class Main {
             }
         }
     }
-
-    private static void checkTemp() {
-        try (BufferedReader br = new BufferedReader(new FileReader(FILE))) {
-            int value = Integer.valueOf(br.readLine());
-            values.add(value);
-            int total = values.stream().mapToInt(Integer::valueOf).sum();
-            temp = value;
-
-            System.out.println("Now: " + value
-                    + " - Average: " + (total / values.size())
-                    + " - Number of measurements: " + values.size());
-
-            if (temp > 35000) {
-                runCommand("gpio pwm 1 480");
-            } else {
-                runCommand("gpio pwm 1 430");
-            }
-        } catch (Exception ex) {
-            System.err.println("Error during temperature check: "
-                    + ex.getMessage());
-        }
-    }
-
-
-    private static void runCommand(String cmd) {
-        Scanner s = null;
-        try {
-            s = new Scanner(Runtime.getRuntime().exec(cmd).getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public static void startServices() throws ExecutionException, InterruptedException {
+        webserver.WebService.boot(); // Start WebService
+        DMXService.dmxRoutine = true;
+        DMXService.sendDMXRoutine();   //  Start DMX Service
     }
 }

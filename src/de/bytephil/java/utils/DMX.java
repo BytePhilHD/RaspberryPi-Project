@@ -8,6 +8,11 @@ public class DMX {
      * Neue Idee 16.09.2021: Senden der Daten an einen Atmel, der dann DMX ausgibt
      *
      * Um Richtig auszulesen (aus Bytes) byte & 0xff
+     *
+     *
+     *
+     *
+     *  NOTE: This Class is outdated and not working properly! The newest DMX sending method is in the "DMX_SEND" Class!
      */
 
     private static List<Byte> bytes = new ArrayList<Byte>();
