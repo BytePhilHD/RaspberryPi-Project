@@ -14,16 +14,21 @@ import java.util.Scanner;
 
 public class Output {
 
-    public static Pin dmxpin = RaspiPin.GPIO_08;
+    public static Pin dmxPinplus = RaspiPin.GPIO_08;
+    public static Pin dmxPinminus = RaspiPin.GPIO_09;
     private static GpioController gpio = null;
-    private static GpioPinDigitalOutput pin = null;
+    private static GpioPinDigitalOutput pinplus = null;
+    private static GpioPinDigitalOutput pinminus = null;
 
     // Test if system is running with Pi4J installed
     public static boolean testOutput() {
         try {
             gpio = GpioFactory.getInstance();       // If the system has Pi4J installed gpio and pin get initialized
-            pin = gpio.provisionDigitalOutputPin(dmxpin,   // PIN NUMBER
-                    "DMXPIN",           // PIN FRIENDLY NAME (optional)
+            pinplus = gpio.provisionDigitalOutputPin(dmxPinplus,   // PIN NUMBER
+                    "DMXPIN+",           // PIN FRIENDLY NAME (optional)
+                    PinState.LOW);
+            pinminus = gpio.provisionDigitalOutputPin(dmxPinminus,   // PIN NUMBER
+                    "DMXPIN-",           // PIN FRIENDLY NAME (optional)
                     PinState.LOW);
             return true;
         } catch (ExceptionInInitializerError e) {
@@ -37,9 +42,11 @@ public class Output {
 
         try {
             if (bit == 0) {
-                pin.low();
+                pinplus.low();
+                pinminus.high();
             } else {
-                pin.high();
+                pinplus.high();
+                pinminus.low();
             }
         } catch (Exception e) {
             Console.print(e.getMessage(), MessageType.ERROR);
