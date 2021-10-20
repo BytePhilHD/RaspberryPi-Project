@@ -16,7 +16,7 @@ public class Main {
     public static Main getInstance() {
         return instance;
     }
-    private static String version = "0.0.1";
+    private static String version = "0.0.2";
 
     public static Scanner scanner = new Scanner(System.in);
 

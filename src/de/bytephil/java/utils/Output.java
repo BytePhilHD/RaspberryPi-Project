@@ -40,7 +40,7 @@ public class Output {
     public static void outputDMX(int bit) {
         Scanner s = null;
 
-        try {
+       /* try {
             if (bit == 0) {
                 pinplus.low();
                 pinminus.high();
@@ -51,6 +51,8 @@ public class Output {
         } catch (Exception e) {
             Console.print(e.getMessage(), MessageType.ERROR);
         }
+
+        */
 
 
         // DEBUG Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);

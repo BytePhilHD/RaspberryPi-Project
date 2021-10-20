@@ -3,6 +3,7 @@ package utils;
 import enums.BitType;
 import enums.MessageType;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -67,6 +68,7 @@ public class DMXService {
     public static void sendDMXRoutine() {
         long time = 0;
         int timer = 0;
+        int bytes = 0;
         int bits = 0;
         boolean started = false;
         boolean mab = false;
@@ -76,14 +78,14 @@ public class DMXService {
                 time = System.nanoTime();
                 started = true;
             }
-            if (bits == 0) {
+            if (bytes == 0) {
                 Output.outputDMX(0);
                 if (System.nanoTime() >= time+88000) {              // 88us RESET
                     time = System.nanoTime();
-                    bits++;
+                    bytes++;
                 }
             }
-            if (bits == 1) {
+            if (bytes == 1) {
                 if (!mab) {
                     Output.outputDMX(1);
                     if (System.nanoTime() >= time+8000) {              // 8us Mark after Break
@@ -95,26 +97,33 @@ public class DMXService {
                     Output.outputDMX(0);
                     if (System.nanoTime() >= time+44000) {              // 44us Startbyte Frame Width
                         time = System.nanoTime();
-                        bits++;
+                        bytes++;
                     }
                 }
             }
-            else if (bits > 1) {
+            else if (bytes > 1 && bytes <= 512) {
+
                 if (System.nanoTime() >= time+4000) {                  // 4us pro Bit
-                    time = System.nanoTime();
-
+                    if (bits == 0) {  // Start Bit
+                        Output.outputDMX(0);
+                        bits++;
+                        time = System.nanoTime();
+                    } else if (bits <= 8) {
+                        Output.outputDMX(1);
+                        bits++;
+                        time = System.nanoTime();
+                    } else if (bits == 9) {
+                        Output.outputDMX(1);
+                        bits = 0;
+                        bytes++;
+                        time = System.nanoTime();
+                    }
                 }
             }
-            /*if (System.nanoTime() >= time+4000) {
+            else if (bytes >= 512) {
+                bytes = 0;
                 time = System.nanoTime();
-                if (timer >= 250000) {
-                    System.out.println("Time erreicht");
-                    timer = 0;
-                }
-                timer++;
             }
-
-             */
         }
     }
 }
