@@ -14,7 +14,23 @@ public class DMXService {
     private static int bits = 0;
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        sendDMXRoutine();
+
+        //sendDMXRoutine();
+        /*
+        long time = 0;
+        boolean started = false;
+        while (true) {
+            if (!started) {
+                time = System.nanoTime();
+                started = true;
+            }
+            if (System.nanoTime() >= time + 100000) {              // 88us RESET
+                time = System.nanoTime();
+                System.out.println("Timer");
+            }
+        }
+
+         */
     }
 
     public static boolean dmxRoutine = false;
@@ -32,7 +48,9 @@ public class DMXService {
                 Output.outputDMX(0);
                 System.out.println("BREAK SECTION");
                 futures.add(scheduler.schedule(() -> 0, 88, TimeUnit.MICROSECONDS));           // BREAK BIT = 88 us
-                for (Future<Integer> e : futures) { e.get(); }
+                for (Future<Integer> e : futures) {
+                    e.get();
+                }
                 futures.clear();
 
                 Output.outputDMX(1);
@@ -75,12 +93,71 @@ public class DMXService {
 
         while (true) {
             if (!started) {
+                time = Instant.now().getNano();
+                started = true;
+            }
+            if (bytes == 0) {
+                Output.outputDMX(0);
+                if (Instant.now().getNano() >= time + 88) {              // 88us RESET
+                    time = Instant.now().getNano();
+                    bytes++;
+                }
+            }
+            if (bytes == 1) {
+                if (!mab) {
+                    Output.outputDMX(1);
+                    if (Instant.now().getNano() >= time + 8) {              // 8us Mark after Break
+                        time = Instant.now().getNano();
+                        mab = true;
+                    }
+                } else {
+                    Output.outputDMX(0);
+                    if (Instant.now().getNano() >= time + 44) {              // 44us Startbyte Frame Width
+                        time = Instant.now().getNano();
+                        bytes++;
+                    }
+                }
+            } else if (bytes > 1 && bytes <= 512) {
+
+                if (Instant.now().getNano() >= time + 4) {                  // 4us pro Bit
+                    if (bits == 0) {  // Start Bit
+                        Output.outputDMX(0);
+                        bits++;
+                        time = Instant.now().getNano();
+                    } else if (bits <= 8) {
+                        Output.outputDMX(1);
+                        bits++;
+                        time = Instant.now().getNano();
+                    } else if (bits == 9) {
+                        Output.outputDMX(1);
+                        bits = 0;
+                        bytes++;
+                        time = Instant.now().getNano();
+                    }
+                }
+            } else if (bytes >= 512) {
+                bytes = 0;
+                time = Instant.now().getNano();
+            }
+        }
+    }
+
+    public static void sendDMXRoutineOLD1() {
+        long time = 0;
+        int timer = 0;
+        int bytes = 0;
+        int bits = 0;
+        boolean started = false;
+        boolean mab = false;
+
+        while (true) {
+            if (!started) {
                 time = System.nanoTime();
                 started = true;
             }
             if (bytes == 0) {
                 Output.outputDMX(0);
-                if (System.nanoTime() >= time+88000) {              // 88us RESET
+                if (System.nanoTime() >= time + 88000) {              // 88us RESET
                     time = System.nanoTime();
                     bytes++;
                 }
@@ -88,22 +165,20 @@ public class DMXService {
             if (bytes == 1) {
                 if (!mab) {
                     Output.outputDMX(1);
-                    if (System.nanoTime() >= time+8000) {              // 8us Mark after Break
+                    if (System.nanoTime() >= time + 8000) {              // 8us Mark after Break
                         time = System.nanoTime();
                         mab = true;
                     }
-                }
-                else {
+                } else {
                     Output.outputDMX(0);
-                    if (System.nanoTime() >= time+44000) {              // 44us Startbyte Frame Width
+                    if (System.nanoTime() >= time + 44000) {              // 44us Startbyte Frame Width
                         time = System.nanoTime();
                         bytes++;
                     }
                 }
-            }
-            else if (bytes > 1 && bytes <= 512) {
+            } else if (bytes > 1 && bytes <= 512) {
 
-                if (System.nanoTime() >= time+4000) {                  // 4us pro Bit
+                if (System.nanoTime() >= time + 4000) {                  // 4us pro Bit
                     if (bits == 0) {  // Start Bit
                         Output.outputDMX(0);
                         bits++;
@@ -119,8 +194,7 @@ public class DMXService {
                         time = System.nanoTime();
                     }
                 }
-            }
-            else if (bytes >= 512) {
+            } else if (bytes >= 512) {
                 bytes = 0;
                 time = System.nanoTime();
             }

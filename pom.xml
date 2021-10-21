@@ -21,6 +21,12 @@
             <artifactId>pi4j-core</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin</artifactId>
+            <version>3.13.6</version>
+            <type>jar</type>
+        </dependency>
 
     </dependencies>
 
