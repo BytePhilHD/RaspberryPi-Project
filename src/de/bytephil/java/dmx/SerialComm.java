@@ -1,4 +1,4 @@
-package utils;// START SNIPPET: serial-snippet
+package dmx;// START SNIPPET: serial-snippet
 
 
 /*
@@ -114,7 +114,7 @@ public class SerialComm {
             //       model 3B may return "/dev/ttyS0" or "/dev/ttyAMA0" depending on
             //       environment configuration.
             config.device(SerialPort.getDefaultPort())                               // TODO Evtl geht RaspiPin nicht! Original: SerialPort.getDefaultPort()   RaspiPin.GPIO_08.getName()
-                    .baud(Baud._200)
+                    .baud(Baud._230400)
                     .dataBits(DataBits._8)
                     .parity(Parity.NONE)
                     .stopBits(StopBits._1)
@@ -137,6 +137,8 @@ public class SerialComm {
             // continuous loop to keep the program running until the user terminates the program
             while(console.isRunning()) {
                 try {
+                    //serial.sendBreak();
+
                     // write a formatted string to the serial transmit buffer
                     serial.write("CURRENT TIME: " + new Date().toString());
 
