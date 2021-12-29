@@ -2,6 +2,7 @@ package main;
 
 import enums.MessageType;
 import utils.*;
+import webserver.WebService;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -28,9 +29,15 @@ public class Main {
     public boolean debugMSG = true;
 
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException, IOException {
+    public static void main(String[] args) throws InterruptedException {
+        System.out.println("Starting test...");
 
-        /*
+        WebService.boot();
+    }
+
+    /*public static void main(String[] args) throws InterruptedException, ExecutionException, IOException {
+
+
         boolean started = false;
         long startzeit = 0;
         int cycles = 0;
@@ -72,8 +79,9 @@ public class Main {
             System.out.println("Should work");
         }
 
-        */
+
     }
+    */
 
     //
     //              Startup function
