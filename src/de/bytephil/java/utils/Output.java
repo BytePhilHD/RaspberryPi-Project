@@ -16,6 +16,7 @@ public class Output {
 
     public static Pin dmxPinplus = RaspiPin.GPIO_08;
     public static Pin dmxPinminus = RaspiPin.GPIO_09;
+    private static GpioPinDigitalOutput pin2 = null;
     private static GpioController gpio = null;
     private static GpioPinDigitalOutput pinplus = null;
     private static GpioPinDigitalOutput pinminus = null;
@@ -36,11 +37,26 @@ public class Output {
         }
     }
 
+    public static void Output(PinState state, int pulse) {
+        try {
+            gpio = GpioFactory.getInstance();
+            Pin pin = RaspiPin.GPIO_02;
+            pin2 = gpio.provisionDigitalOutputPin(pin);
+        } catch (Exception e1) {
+        }
+
+        pin2.setState(state);
+
+        if (pulse != 0) {
+            pin2.pulse(pulse);
+        }
+    }
+
     // Output the bit to an specific Port
     public static void outputDMX(int bit) {
         Scanner s = null;
 
-       try {
+        try {
             if (bit == 0) {
                 pinplus.low();
                 pinminus.high();
@@ -51,8 +67,6 @@ public class Output {
         } catch (Exception e) {
             Console.print(e.getMessage(), MessageType.ERROR);
         }
-
-
 
 
         // DEBUG Console.print("Value " + bit + " sent to pin " + dmxpin, MessageType.DEBUG);
