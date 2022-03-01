@@ -4,7 +4,7 @@
     <targets>
       <target name="root@192.168.178.141:22" type="ssh/sftp" uuid="346817e9-a3bd-477e-9688-70255e8620be">
         <config>
-          <option name="projectRootOnTarget" value="/home" />
+          <option name="projectRootOnTarget" value="/home/RaspberryPiProject" />
           <option name="serverName" value="root@192.168.178.141:22 password" />
         </config>
         <ContributedStateBase type="JavaLanguageRuntime">

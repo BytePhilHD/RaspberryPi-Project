@@ -21,6 +21,8 @@ public class Output {
     private static GpioPinDigitalOutput pinplus = null;
     private static GpioPinDigitalOutput pinminus = null;
 
+    private static boolean raspberrypi = false;
+
     // Test if system is running with Pi4J installed
     public static boolean testOutput() {
         try {
@@ -37,18 +39,26 @@ public class Output {
         }
     }
 
-    public static void Output(PinState state, int pulse) {
+    public static void testOutputNew() {
         try {
             gpio = GpioFactory.getInstance();
             Pin pin = RaspiPin.GPIO_02;
             pin2 = gpio.provisionDigitalOutputPin(pin);
+            raspberrypi = true;
         } catch (Exception e1) {
+            Console.print("There was an error testing your Output: " + e1.getMessage(), MessageType.ERROR);
         }
+    }
 
-        pin2.setState(state);
+    public static void Output(PinState state, int pulse) {
+        if (raspberrypi) {
+            pin2.setState(state);
 
-        if (pulse != 0) {
-            pin2.pulse(pulse);
+            if (pulse != 0) {
+                pin2.pulse(pulse);
+            }
+        } else {
+            Console.print("Device is probably no RaspberryPi!", MessageType.ERROR);
         }
     }
 

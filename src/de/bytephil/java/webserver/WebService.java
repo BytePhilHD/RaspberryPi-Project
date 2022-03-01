@@ -11,6 +11,7 @@ import org.eclipse.jetty.server.ServerConnector;
 import utils.Console;
 import utils.Output;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class WebService {
@@ -36,17 +37,17 @@ public class WebService {
     }
 
     private static void handleInput(String input) {
+        Console.print("Received " + input.substring(0, 1).toUpperCase() + input.substring(1), MessageType.INFO);
         switch (input) {
             case "fullon":
-                Console.print("DMX - Send out Full On", MessageType.INFO);
                 Output.Output(PinState.HIGH, 500);
                 break;
             case "blackout":
-                Console.print("DMX - Send out Blackout", MessageType.INFO);
-                Output.Output(PinState.LOW, 0);
+
+                Output.Output(PinState.HIGH, 100);
                 break;
             default:
-                Console.print("DMX - Received invalid input from WebService!", MessageType.ERROR);
+                Console.print("Received invalid input from WebService!", MessageType.ERROR);
                 break;
         }
     }

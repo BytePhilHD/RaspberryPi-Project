@@ -37,6 +37,8 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Starting test...");
 
+        Output.testOutputNew();
+
         WebService.boot();
     }
 
